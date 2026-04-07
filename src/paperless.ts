@@ -104,8 +104,11 @@ export async function downloadDocument(baseUrl: string, token: string, id: numbe
     responseType: 'arrayBuffer',
   });
   const disposition = response.headers.get('content-disposition');
+  const utf8Match = disposition?.match(/filename\*=UTF-8''(.+?)(?:;|$)/i);
   const match = disposition?.match(/filename="?([^"]+)"?/);
-  return { buffer: response._data as ArrayBuffer, fileName: match?.[1] ?? null };
+  const rawName = utf8Match?.[1] ? decodeURIComponent(utf8Match[1]) : match?.[1] ?? null;
+  const fileName = rawName ? rawName.split(/[\/\\]/).pop()! : null;
+  return { buffer: response._data as ArrayBuffer, fileName };
 }
 
 export async function exportAll(baseUrl: string, token: string): Promise<PaperlessExport> {

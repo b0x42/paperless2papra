@@ -13,6 +13,15 @@ export interface MigrationResult {
   failed: { title: string; error: string }[];
 }
 
+const MIME_EXTENSIONS: Record<string, string> = {
+  'application/pdf': '.pdf', 'image/png': '.png', 'image/jpeg': '.jpg', 'image/tiff': '.tiff',
+  'image/gif': '.gif', 'image/webp': '.webp', 'text/plain': '.txt', 'text/csv': '.csv',
+  'text/html': '.html', 'application/msword': '.doc', 'application/rtf': '.rtf',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation': '.pptx',
+};
+
 async function createTagsInPapra(
   client: ReturnType<typeof createClient>,
   orgId: string,
@@ -62,21 +71,13 @@ async function migrateOneDocument(
   tagMap: Map<number, string>,
   correspondentMap: Map<number, string>,
   docTypeMap: Map<number, string>,
-): Promise<'migrated' | 'skipped' | { error: string }> {
+): Promise<'migrated' | 'skipped'> {
   const encodedName = encodeDocumentName(doc.title, doc.created_date, doc.archive_serial_number);
   console.log(`${pc.dim(`[${index + 1}/${total}]`)} Migrating "${pc.bold(encodedName)}"...`);
 
   // Download from Paperless
   const { buffer, fileName: responseFileName } = await downloadDocument(paperlessUrl, paperlessToken, doc.id);
-  const mimeExtensions: Record<string, string> = {
-    'application/pdf': '.pdf', 'image/png': '.png', 'image/jpeg': '.jpg', 'image/tiff': '.tiff',
-    'image/gif': '.gif', 'image/webp': '.webp', 'text/plain': '.txt', 'text/csv': '.csv',
-    'text/html': '.html', 'application/msword': '.doc', 'application/rtf': '.rtf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation': '.pptx',
-  };
-  const ext = doc.mime_type ? (mimeExtensions[doc.mime_type] ?? `.${doc.mime_type.split('/')[1]}`) : '';
+  const ext = doc.mime_type ? (MIME_EXTENSIONS[doc.mime_type] ?? `.${doc.mime_type.split('/')[1]}`) : '';
   const fileName = doc.original_file_name ?? responseFileName ?? `${doc.title}${ext}`;
   const file = new File([buffer], fileName);
 
@@ -87,7 +88,7 @@ async function migrateOneDocument(
     documentId = document.id;
   }
   catch (err: any) {
-    if (err?.data?.message?.includes?.('duplicate') || err?.statusCode === 409) {
+    if (err?.statusCode === 409) {
       console.log(pc.yellow(`  ⚠ Skipped (duplicate)`));
       return 'skipped';
     }
@@ -95,14 +96,20 @@ async function migrateOneDocument(
   }
 
   // PATCH name + content in one call
-  const patchBody: { name?: string; content?: string } = { name: encodedName };
-  if (doc.content) patchBody.content = doc.content;
-  await patchDocument(papraUrl, papraToken, orgId, documentId, patchBody);
+  try {
+    const patchBody: { name?: string; content?: string } = { name: encodedName };
+    if (doc.content) patchBody.content = doc.content;
+    await patchDocument(papraUrl, papraToken, orgId, documentId, patchBody);
 
-  // Associate tags
-  const papraTagIds = resolveTagIds(doc, tagMap, correspondentMap, docTypeMap);
-  for (const tagId of papraTagIds) {
-    await client.forOrganization(orgId).addTagToDocument({ documentId, tagId });
+    // Associate tags
+    const papraTagIds = resolveTagIds(doc, tagMap, correspondentMap, docTypeMap);
+    await Promise.all(papraTagIds.map(tagId =>
+      client.forOrganization(orgId).addTagToDocument({ documentId, tagId }),
+    ));
+  }
+  catch (err) {
+    console.log(pc.yellow(`  ⚠ Document uploaded (id: ${documentId}) but post-processing failed — manual fix needed`));
+    throw err;
   }
 
   console.log(pc.green(`  ✓ Done`));

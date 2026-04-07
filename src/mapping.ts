@@ -40,7 +40,7 @@ export function mapDocumentTypes(types: PaperlessDocumentType[]): MappedTag[] {
 
 export function encodeDocumentName(title: string, createdDate: string | null, asn: number | null): string {
   const parts: string[] = [];
-  if (createdDate) parts.push(`[${createdDate}]`);
+  if (createdDate) parts.push(`[${createdDate.slice(0, 10)}]`);
   if (asn != null) parts.push(`[ASN:${asn}]`);
   parts.push(title);
   return parts.join(' ');

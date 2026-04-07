@@ -84,6 +84,7 @@ const migrateCommand = defineCommand({
       args['papra-url']!, args['papra-token']!, args['papra-org-id']!,
     );
     printSummary(result);
+    if (result.failed.length > 0) process.exit(1);
   },
 });
 
