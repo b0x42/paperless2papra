@@ -98,11 +98,14 @@ export async function fetchDocuments(baseUrl: string, token: string): Promise<Pa
   return fetchAllPaginated(baseUrl, '/api/documents/', token, paperlessDocumentSchema);
 }
 
-export async function downloadDocument(baseUrl: string, token: string, id: number): Promise<ArrayBuffer> {
-  return ofetch(`${baseUrl}/api/documents/${id}/download/?original=true`, {
+export async function downloadDocument(baseUrl: string, token: string, id: number): Promise<{ buffer: ArrayBuffer; fileName: string | null }> {
+  const response = await ofetch.raw(`${baseUrl}/api/documents/${id}/download/?original=true`, {
     headers: createHeaders(token),
     responseType: 'arrayBuffer',
   });
+  const disposition = response.headers.get('content-disposition');
+  const match = disposition?.match(/filename="?([^"]+)"?/);
+  return { buffer: response._data as ArrayBuffer, fileName: match?.[1] ?? null };
 }
 
 export async function exportAll(baseUrl: string, token: string): Promise<PaperlessExport> {

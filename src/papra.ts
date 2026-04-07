@@ -67,28 +67,18 @@ async function migrateOneDocument(
   console.log(`${pc.dim(`[${index + 1}/${total}]`)} Migrating "${pc.bold(encodedName)}"...`);
 
   // Download from Paperless
-  const fileBuffer = await downloadDocument(paperlessUrl, paperlessToken, doc.id);
+  const { buffer, fileName: responseFileName } = await downloadDocument(paperlessUrl, paperlessToken, doc.id);
   const mimeExtensions: Record<string, string> = {
-    'application/pdf': '.pdf',
-    'image/png': '.png',
-    'image/jpeg': '.jpg',
-    'image/tiff': '.tiff',
-    'image/gif': '.gif',
-    'image/webp': '.webp',
-    'text/plain': '.txt',
-    'text/csv': '.csv',
-    'text/html': '.html',
+    'application/pdf': '.pdf', 'image/png': '.png', 'image/jpeg': '.jpg', 'image/tiff': '.tiff',
+    'image/gif': '.gif', 'image/webp': '.webp', 'text/plain': '.txt', 'text/csv': '.csv',
+    'text/html': '.html', 'application/msword': '.doc', 'application/rtf': '.rtf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation': '.pptx',
-    'application/msword': '.doc',
-    'application/vnd.ms-excel': '.xls',
-    'application/rtf': '.rtf',
-    'application/zip': '.zip',
   };
   const ext = doc.mime_type ? (mimeExtensions[doc.mime_type] ?? `.${doc.mime_type.split('/')[1]}`) : '';
-  const fileName = doc.original_file_name ?? `${doc.title}${ext}`;
-  const file = new File([fileBuffer], fileName);
+  const fileName = doc.original_file_name ?? responseFileName ?? `${doc.title}${ext}`;
+  const file = new File([buffer], fileName);
 
   // Upload to Papra
   let documentId: string;
