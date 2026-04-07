@@ -17,8 +17,6 @@ async function createTagsInPapra(
   client: ReturnType<typeof createClient>,
   orgId: string,
   mappedTags: MappedTag[],
-  papraUrl: string,
-  papraToken: string,
 ): Promise<{ tagMap: Map<number, string>; correspondentMap: Map<number, string>; docTypeMap: Map<number, string> }> {
   const orgClient = client.forOrganization(orgId);
   const { tags: existingTags } = await orgClient.listTags();
@@ -138,7 +136,7 @@ export async function migrate(
     ...mapCorrespondents(data.correspondents),
     ...mapDocumentTypes(data.documentTypes),
   ];
-  const { tagMap, correspondentMap, docTypeMap } = await createTagsInPapra(client, orgId, allMappedTags, papraUrl, papraToken);
+  const { tagMap, correspondentMap, docTypeMap } = await createTagsInPapra(client, orgId, allMappedTags);
   console.log(pc.green(`  ✓ ${allMappedTags.length} tags ready\n`));
 
   // Migrate documents

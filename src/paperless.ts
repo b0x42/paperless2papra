@@ -69,9 +69,14 @@ async function fetchAllPaginated<T extends v.BaseSchema<unknown, unknown, v.Base
 
   while (url) {
     const raw: unknown = await ofetch(url, { headers: createHeaders(token) });
-    const page = v.parse(schema, raw);
-    results.push(...(page.results as v.InferOutput<T>[]));
-    url = page.next;
+    try {
+      const page = v.parse(schema, raw);
+      results.push(...(page.results as v.InferOutput<T>[]));
+      url = page.next;
+    }
+    catch (e) {
+      throw new Error(`Validation failed for ${url}: ${e instanceof Error ? e.message : e}`);
+    }
   }
 
   return results;

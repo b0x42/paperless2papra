@@ -6,6 +6,9 @@
   "author": "Benjamin",
   "license": "AGPL-3.0-or-later",
   "keywords": ["papra", "paperless", "paperless-ngx", "migration", "cli", "document-management"],
+  "engines": {
+    "node": ">=22"
+  },
   "bin": {
     "paperless-to-papra": "./bin/cli.mjs"
   },
