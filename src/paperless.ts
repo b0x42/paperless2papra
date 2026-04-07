@@ -1,7 +1,7 @@
 import { ofetch } from 'ofetch'
 import * as v from 'valibot'
 
-function paginatedSchema<T extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>>(itemSchema: T) {
+export function paginatedSchema<T extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>>(itemSchema: T) {
   return v.object({
     count: v.number(),
     next: v.nullable(v.string()),
@@ -10,23 +10,23 @@ function paginatedSchema<T extends v.BaseSchema<unknown, unknown, v.BaseIssue<un
   })
 }
 
-const paperlessTagSchema = v.object({
+export const paperlessTagSchema = v.object({
   id: v.number(),
   name: v.string(),
   color: v.optional(v.nullable(v.string())),
 })
 
-const paperlessCorrespondentSchema = v.object({
+export const paperlessCorrespondentSchema = v.object({
   id: v.number(),
   name: v.string(),
 })
 
-const paperlessDocumentTypeSchema = v.object({
+export const paperlessDocumentTypeSchema = v.object({
   id: v.number(),
   name: v.string(),
 })
 
-const paperlessDocumentSchema = v.object({
+export const paperlessDocumentSchema = v.object({
   id: v.number(),
   title: v.string(),
   content: v.nullable(v.string()),
