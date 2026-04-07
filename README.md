@@ -1,4 +1,4 @@
-# paperless-to-papra
+# paperless2papra
 
 CLI migration tool to export documents from [Paperless-ngx](https://docs.paperless-ngx.com) and import them into [Papra](https://papra.app).
 
@@ -17,7 +17,7 @@ CLI migration tool to export documents from [Paperless-ngx](https://docs.paperle
 ## Installation
 
 ```bash
-pnpm install -g paperless-to-papra
+pnpm install -g paperless2papra
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ pnpm install -g paperless-to-papra
 ### Full migration
 
 ```bash
-paperless-to-papra migrate \
+paperless2papra migrate \
   --paperless-url http://localhost:8000 \
   --paperless-token YOUR_PAPERLESS_TOKEN \
   --papra-url http://localhost:1221 \
@@ -36,7 +36,7 @@ paperless-to-papra migrate \
 ### Dry run (preview without changes)
 
 ```bash
-paperless-to-papra dry-run \
+paperless2papra dry-run \
   --paperless-url http://localhost:8000 \
   --paperless-token YOUR_PAPERLESS_TOKEN
 ```
@@ -44,7 +44,7 @@ paperless-to-papra dry-run \
 ### Export only (dump to JSON)
 
 ```bash
-paperless-to-papra export-only \
+paperless2papra export-only \
   --paperless-url http://localhost:8000 \
   --paperless-token YOUR_PAPERLESS_TOKEN \
   --output export.json

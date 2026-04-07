@@ -1,5 +1,5 @@
 {
-  "name": "paperless-to-papra",
+  "name": "paperless2papra",
   "type": "module",
   "version": "0.1.0",
   "description": "CLI migration tool to export documents from Paperless-ngx and import them into Papra.",
@@ -10,7 +10,7 @@
     "node": ">=22"
   },
   "bin": {
-    "paperless-to-papra": "./bin/cli.mjs"
+    "paperless2papra": "./bin/cli.mjs"
   },
   "exports": {
     ".": "./dist/cli.js"

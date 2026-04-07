@@ -1,6 +1,6 @@
 # Design Decisions
 
-This document explains how `paperless-to-papra` maps data between Paperless-ngx and Papra, and why.
+This document explains how `paperless2papra` maps data between Paperless-ngx and Papra, and why.
 
 ## Data Model Differences
 

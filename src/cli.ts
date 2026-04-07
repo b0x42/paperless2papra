@@ -152,7 +152,7 @@ const exportOnlyCommand = defineCommand({
 })
 
 const main = defineCommand({
-  meta: { name: 'paperless-to-papra', version, description: 'Migrate documents from Paperless-ngx to Papra' },
+  meta: { name: 'paperless2papra', version, description: 'Migrate documents from Paperless-ngx to Papra' },
   subCommands: { 'migrate': migrateCommand, 'dry-run': dryRunCommand, 'export-only': exportOnlyCommand },
 })
 
