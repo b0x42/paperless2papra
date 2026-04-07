@@ -99,7 +99,7 @@ export async function fetchDocuments(baseUrl: string, token: string): Promise<Pa
 }
 
 export async function downloadDocument(baseUrl: string, token: string, id: number): Promise<ArrayBuffer> {
-  return ofetch(`${baseUrl}/api/documents/${id}/download/`, {
+  return ofetch(`${baseUrl}/api/documents/${id}/download/?original=true`, {
     headers: createHeaders(token),
     responseType: 'arrayBuffer',
   });
