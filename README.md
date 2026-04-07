@@ -2,6 +2,8 @@
 
 CLI migration tool to export documents from [Paperless-ngx](https://docs.paperless-ngx.com) and import them into [Papra](https://papra.app).
 
+> **Try Papra risk-free.** This tool copies your documents from Paperless-ngx to Papra without touching your Paperless data. Nothing gets modified, nothing gets deleted — it's read-only on the Paperless side. If you don't like Papra, your Paperless setup is exactly as you left it.
+
 ## Features
 
 - 📦 **Full export** — documents, tags, correspondents, and document types from Paperless-ngx
