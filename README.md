@@ -31,6 +31,16 @@ npm install -g https://github.com/b0x42/paperless2papra/releases/download/v1.0.0
 
 ## Usage
 
+### What you'll need
+
+| Value | Where to get it |
+|-------|----------------|
+| `PAPERLESS_URL` | The URL of your Paperless-ngx instance (e.g. `http://localhost:8000`) |
+| `PAPERLESS_TOKEN` | In Paperless-ngx, go to **Settings → API Auth Token** |
+| `PAPRA_URL` | The URL of your Papra instance (e.g. `http://localhost:1221`) |
+| `PAPRA_TOKEN` | In Papra, go to **API Keys** (`/api-keys`) and generate a key |
+| `PAPRA_ORG_ID` | In Papra, go to **Admin → Organizations** (`/admin/organizations`) |
+
 ### Full migration
 
 ```bash
@@ -61,7 +71,7 @@ paperless2papra export-only \
 
 ### Environment variables
 
-All options can be provided via environment variables:
+All options can be provided via environment variables instead of flags:
 
 | Flag | Environment Variable |
 |------|---------------------|
@@ -70,10 +80,6 @@ All options can be provided via environment variables:
 | `--papra-url` | `PAPRA_URL` |
 | `--papra-token` | `PAPRA_TOKEN` |
 | `--papra-org-id` | `PAPRA_ORG_ID` |
-
-CLI flags take precedence over environment variables.
-
-> **Tip:** Your Papra organization ID can be found in the Papra admin panel under **Admin → Organizations** (`/admin/organizations`). Your Papra API key can be generated under **API Keys** (`/api-keys`).
 
 ## How data is mapped
 
