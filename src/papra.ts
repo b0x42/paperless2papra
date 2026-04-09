@@ -47,8 +47,14 @@ async function createTagsInPapra(
   for (const mapped of mappedTags) {
     let papraId = existingByName.get(mapped.name)
     if (!papraId) {
-      const { tag } = await orgClient.createTag({ name: mapped.name, color: mapped.color })
-      papraId = tag.id
+      try {
+        const { tag } = await orgClient.createTag({ name: mapped.name, color: mapped.color })
+        papraId = tag.id
+      }
+      catch (e: any) {
+        const detail = e?.data ? JSON.stringify(e.data) : String(e)
+        throw new Error(`Failed to create tag "${mapped.name}" (color: ${mapped.color}): ${detail}`)
+      }
     }
 
     if (mapped.source === 'tag')

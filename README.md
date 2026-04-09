@@ -105,6 +105,24 @@ Your Papra API key needs these permissions:
 - `documents:create`, `documents:read`, `documents:update`
 - `tags:create`, `tags:read`
 
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run from source (no build needed)
+npm run dev -- migrate --help
+
+# Build dist/ from src/
+npm run build
+
+# Run tests
+npm test
+```
+
+After making changes to `src/`, run `npm run build` and commit both `src/` and `dist/` — the compiled `dist/` is committed so the package can be installed directly from GitHub without a build step.
+
 ## License
 
 [AGPL-3.0-or-later](LICENSE)

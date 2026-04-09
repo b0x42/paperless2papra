@@ -105,7 +105,7 @@ async function fetchAllPaginated(baseUrl, path, token, itemSchema) {
 		try {
 			const page = v.parse(schema, raw);
 			results.push(...page.results);
-			url = page.next;
+			url = page.next ? `${baseUrl}${new URL(page.next).pathname}${new URL(page.next).search}` : null;
 		} catch (e) {
 			throw new Error(`Validation failed for ${url}: ${e instanceof Error ? e.message : e}`);
 		}
@@ -180,12 +180,15 @@ async function createTagsInPapra(client, orgId, mappedTags) {
 	const docTypeMap = /* @__PURE__ */ new Map();
 	for (const mapped of mappedTags) {
 		let papraId = existingByName.get(mapped.name);
-		if (!papraId) {
+		if (!papraId) try {
 			const { tag } = await orgClient.createTag({
 				name: mapped.name,
 				color: mapped.color
 			});
 			papraId = tag.id;
+		} catch (e) {
+			const detail = e?.data ? JSON.stringify(e.data) : String(e);
+			throw new Error(`Failed to create tag "${mapped.name}" (color: ${mapped.color}): ${detail}`);
 		}
 		if (mapped.source === "tag") tagMap.set(mapped.sourceId, papraId);
 		else if (mapped.source === "correspondent") correspondentMap.set(mapped.sourceId, papraId);

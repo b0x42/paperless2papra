@@ -73,7 +73,7 @@ async function fetchAllPaginated<T extends v.BaseSchema<unknown, unknown, v.Base
     try {
       const page = v.parse(schema, raw)
       results.push(...(page.results as v.InferOutput<T>[]))
-      url = page.next
+      url = page.next ? `${baseUrl}${new URL(page.next).pathname}${new URL(page.next).search}` : null
     }
     catch (e) {
       throw new Error(`Validation failed for ${url}: ${e instanceof Error ? e.message : e}`)
