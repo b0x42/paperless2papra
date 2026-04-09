@@ -294,9 +294,10 @@ function printSummary(result) {
 		console.log(`  Failed:   ${pc.red(String(result.failed.length))}`);
 		for (const f of result.failed) console.log(`    - ${f.title}: ${f.error}`);
 		if (result.failed.some((f) => f.error.includes("File too large"))) {
-			console.log(pc.yellow(`\n  Hint: Some documents exceeded Papra's upload size limit.`));
-			console.log(pc.yellow(`  Set DOCUMENT_STORAGE_MAX_UPLOAD_SIZE=0 to disable the limit.`));
-			console.log(pc.dim(`  See: https://docs.papra.app/self-hosting/configuration/#complete-env`));
+			console.log(pc.green(`\n  Hint: Some documents exceeded Papra's upload size limit.`));
+			console.log(pc.green(`  Set DOCUMENT_STORAGE_MAX_UPLOAD_SIZE=0 to disable the limit.`));
+			console.log(pc.green(`  See: https://docs.papra.app/self-hosting/configuration/#complete-env`));
+			console.log(pc.green(`  Re-run this script afterwards — already migrated documents will be skipped.`));
 		}
 	}
 }
