@@ -1,0 +1,8 @@
+.claude/
+.kilocode/
+.kiro/
+.github/
+openspec/
+docs/
+*.test.ts
+eslint.config.js

@@ -17,14 +17,16 @@ CLI migration tool to export documents from [Paperless-ngx](https://docs.paperle
 
 ## Installation
 
-```bash
-npm install -g github:b0x42/paperless2papra
-```
-
-Or run directly without installing:
+Run directly with `npx` (no install needed):
 
 ```bash
 npx github:b0x42/paperless2papra migrate --help
+```
+
+Or install globally from a [release](https://github.com/b0x42/paperless2papra/releases):
+
+```bash
+npm install -g https://github.com/b0x42/paperless2papra/releases/download/v0.1.0/paperless2papra-0.1.0.tgz
 ```
 
 ## Usage
@@ -70,6 +72,8 @@ All options can be provided via environment variables:
 | `--papra-org-id` | `PAPRA_ORG_ID` |
 
 CLI flags take precedence over environment variables.
+
+> **Tip:** Your Papra organization ID can be found in the Papra admin panel under **Admin → Organizations** (`/admin/organizations`). Your Papra API key can be generated under **API Keys** (`/api-keys`).
 
 ## How data is mapped
 

@@ -14,20 +14,18 @@
   "bin": {
     "paperless2papra": "./bin/cli.mjs"
   },
-  "files": ["bin", "dist"],
   "engines": {
     "node": ">=22"
   },
   "scripts": {
     "dev": "tsx ./src/cli.ts",
-    "build": "tsdown",
-    "build:watch": "tsdown --watch",
+    "build": "npx tsdown",
+    "build:watch": "npx tsdown --watch",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
-    "prepublishOnly": "pnpm run build"
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "@papra/api-sdk": "^1.2.0",
