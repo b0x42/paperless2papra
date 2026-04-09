@@ -8,9 +8,13 @@ import { ofetch } from "ofetch";
 import * as v from "valibot";
 const CORRESPONDENT_TAG_COLOR = "#3498db";
 const DOCTYPE_TAG_COLOR = "#2ecc71";
+const MAX_TAG_NAME_LENGTH = 50;
+function truncate(name) {
+	return name.length > MAX_TAG_NAME_LENGTH ? name.slice(0, MAX_TAG_NAME_LENGTH) : name;
+}
 function mapTags(tags) {
 	return tags.map((t) => ({
-		name: t.name,
+		name: truncate(t.name),
 		color: t.color ?? "#e74c3c",
 		source: "tag",
 		sourceId: t.id
@@ -18,7 +22,7 @@ function mapTags(tags) {
 }
 function mapCorrespondents(correspondents) {
 	return correspondents.map((c) => ({
-		name: `correspondent:${c.name}`,
+		name: truncate(`correspondent:${c.name}`),
 		color: CORRESPONDENT_TAG_COLOR,
 		source: "correspondent",
 		sourceId: c.id
@@ -26,7 +30,7 @@ function mapCorrespondents(correspondents) {
 }
 function mapDocumentTypes(types) {
 	return types.map((t) => ({
-		name: `type:${t.name}`,
+		name: truncate(`type:${t.name}`),
 		color: DOCTYPE_TAG_COLOR,
 		source: "document_type",
 		sourceId: t.id
@@ -226,6 +230,7 @@ async function migrateOneDocument(doc, index, total, paperlessUrl, paperlessToke
 			console.log(pc.yellow(`  ⚠ Skipped (duplicate)`));
 			return "skipped";
 		}
+		if (err?.statusCode === 413) throw new Error(`File too large for Papra (${(buffer.byteLength / 1024 / 1024).toFixed(1)} MB)`);
 		throw err;
 	}
 	try {

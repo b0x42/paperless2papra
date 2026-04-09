@@ -110,6 +110,9 @@ async function migrateOneDocument(
       console.log(pc.yellow(`  ⚠ Skipped (duplicate)`))
       return 'skipped'
     }
+    if (err?.statusCode === 413) {
+      throw new Error(`File too large for Papra (${(buffer.byteLength / 1024 / 1024).toFixed(1)} MB)`)
+    }
     throw err
   }
 

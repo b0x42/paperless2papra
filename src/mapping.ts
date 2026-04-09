@@ -11,9 +11,15 @@ export interface MappedTag {
   sourceId: number
 }
 
+const MAX_TAG_NAME_LENGTH = 50
+
+function truncate(name: string): string {
+  return name.length > MAX_TAG_NAME_LENGTH ? name.slice(0, MAX_TAG_NAME_LENGTH) : name
+}
+
 export function mapTags(tags: PaperlessTag[]): MappedTag[] {
   return tags.map(t => ({
-    name: t.name,
+    name: truncate(t.name),
     color: t.color ?? DEFAULT_TAG_COLOR,
     source: 'tag' as const,
     sourceId: t.id,
@@ -22,7 +28,7 @@ export function mapTags(tags: PaperlessTag[]): MappedTag[] {
 
 export function mapCorrespondents(correspondents: PaperlessCorrespondent[]): MappedTag[] {
   return correspondents.map(c => ({
-    name: `correspondent:${c.name}`,
+    name: truncate(`correspondent:${c.name}`),
     color: CORRESPONDENT_TAG_COLOR,
     source: 'correspondent' as const,
     sourceId: c.id,
@@ -31,7 +37,7 @@ export function mapCorrespondents(correspondents: PaperlessCorrespondent[]): Map
 
 export function mapDocumentTypes(types: PaperlessDocumentType[]): MappedTag[] {
   return types.map(t => ({
-    name: `type:${t.name}`,
+    name: truncate(`type:${t.name}`),
     color: DOCTYPE_TAG_COLOR,
     source: 'document_type' as const,
     sourceId: t.id,
