@@ -23,10 +23,10 @@ Run directly with `npx` (no install needed):
 npx github:b0x42/paperless2papra migrate --help
 ```
 
-Or install globally from a [release](https://github.com/b0x42/paperless2papra/releases):
+Or install globally from the [latest release](https://github.com/b0x42/paperless2papra/releases/latest):
 
 ```bash
-npm install -g https://github.com/b0x42/paperless2papra/releases/download/v0.1.0/paperless2papra-0.1.0.tgz
+npm install -g https://github.com/b0x42/paperless2papra/releases/download/v1.0.0/paperless2papra-1.0.0.tgz
 ```
 
 ## Usage
