@@ -1,7 +1,7 @@
 {
   "name": "paperless2papra",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "packageManager": "pnpm@10.33.0",
   "description": "CLI migration tool to export documents from Paperless-ngx and import them into Papra.",
   "author": "Benjamin",
