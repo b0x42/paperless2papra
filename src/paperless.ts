@@ -1,6 +1,8 @@
 import { ofetch } from 'ofetch'
 import * as v from 'valibot'
 
+const REQUEST_TIMEOUT = 30_000
+
 export function paginatedSchema<T extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>>(itemSchema: T) {
   return v.object({
     count: v.number(),
@@ -58,6 +60,21 @@ function createHeaders(token: string) {
   }
 }
 
+function resolveNextUrl(baseUrl: string, next: string): string {
+  let parsed: URL
+  try {
+    parsed = new URL(next)
+  }
+  catch {
+    throw new TypeError(`Invalid pagination URL: ${next}`)
+  }
+  const base = new URL(baseUrl)
+  if (parsed.hostname !== base.hostname) {
+    throw new TypeError(`Pagination URL origin mismatch: expected ${base.hostname}, got ${parsed.hostname}`)
+  }
+  return `${baseUrl}${parsed.pathname}${parsed.search}`
+}
+
 async function fetchAllPaginated<T extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>>(
   baseUrl: string,
   path: string,
@@ -69,11 +86,11 @@ async function fetchAllPaginated<T extends v.BaseSchema<unknown, unknown, v.Base
   let url: string | null = `${baseUrl}${path}`
 
   while (url) {
-    const raw: unknown = await ofetch(url, { headers: createHeaders(token) })
+    const raw: unknown = await ofetch(url, { headers: createHeaders(token), timeout: REQUEST_TIMEOUT })
     try {
       const page = v.parse(schema, raw)
       results.push(...(page.results as v.InferOutput<T>[]))
-      url = page.next ? `${baseUrl}${new URL(page.next).pathname}${new URL(page.next).search}` : null
+      url = page.next ? resolveNextUrl(baseUrl, page.next) : null
     }
     catch (e) {
       throw new Error(`Validation failed for ${url}: ${e instanceof Error ? e.message : e}`)
@@ -103,12 +120,13 @@ export async function downloadDocument(baseUrl: string, token: string, id: numbe
   const response = await ofetch.raw(`${baseUrl}/api/documents/${id}/download/?original=true`, {
     headers: createHeaders(token),
     responseType: 'arrayBuffer',
+    timeout: REQUEST_TIMEOUT,
   })
   const disposition = response.headers.get('content-disposition')
   const utf8Match = disposition?.match(/filename\*=UTF-8''(.+?)(?:;|$)/i)
   const match = disposition?.match(/filename="?([^"]+)"?/)
   const rawName = utf8Match?.[1] ? decodeURIComponent(utf8Match[1]) : match?.[1] ?? null
-  const fileName = rawName ? rawName.split(/[/\\]/).pop()! : null
+  const fileName = rawName ? (rawName.split(/[/\\]/).pop() ?? null) : null
   return { buffer: response._data as ArrayBuffer, fileName }
 }
 

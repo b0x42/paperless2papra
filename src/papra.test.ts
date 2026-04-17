@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import type { PaperlessExport } from './paperless'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { migrate, printSummary } from './papra'

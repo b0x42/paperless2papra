@@ -15,7 +15,7 @@
     "paperless2papra": "./bin/cli.mjs"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=20"
   },
   "scripts": {
     "dev": "tsx ./src/cli.ts",

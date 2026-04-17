@@ -14,7 +14,11 @@ export interface MappedTag {
 const MAX_TAG_NAME_LENGTH = 50
 
 function truncate(name: string): string {
-  return name.length > MAX_TAG_NAME_LENGTH ? name.slice(0, MAX_TAG_NAME_LENGTH) : name
+  if (name.length > MAX_TAG_NAME_LENGTH) {
+    console.warn(`Tag name truncated: "${name}" → "${name.slice(0, MAX_TAG_NAME_LENGTH)}"`)
+    return name.slice(0, MAX_TAG_NAME_LENGTH)
+  }
+  return name
 }
 
 export function mapTags(tags: PaperlessTag[]): MappedTag[] {
