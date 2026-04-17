@@ -1,5 +1,10 @@
 # paperless2papra
 
+[![CI](https://github.com/b0x42/paperless2papra/actions/workflows/ci.yml/badge.svg)](https://github.com/b0x42/paperless2papra/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/b0x42/paperless2papra/actions/workflows/codeql.yml/badge.svg)](https://github.com/b0x42/paperless2papra/actions/workflows/codeql.yml)
+[![License: AGPL-3.0](https://img.shields.io/github/license/b0x42/paperless2papra)](LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/b0x42/paperless2papra)](https://github.com/b0x42/paperless2papra/releases/latest)
+
 CLI migration tool to export documents from [Paperless-ngx](https://docs.paperless-ngx.com) and import them into [Papra](https://papra.app).
 
 > [!TIP]
