@@ -54,6 +54,7 @@ function setupMocks() {
   vi.mocked(downloadDocument).mockResolvedValue({
     buffer: new ArrayBuffer(8),
     fileName: 'test.pdf',
+    contentType: 'application/pdf',
   })
 
   vi.mocked(ofetch).mockResolvedValue({}) // PATCH call
