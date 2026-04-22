@@ -116,7 +116,7 @@ export async function fetchDocuments(baseUrl: string, token: string): Promise<Pa
   return fetchAllPaginated(baseUrl, '/api/documents/', token, paperlessDocumentSchema)
 }
 
-export async function downloadDocument(baseUrl: string, token: string, id: number): Promise<{ buffer: ArrayBuffer, fileName: string | null }> {
+export async function downloadDocument(baseUrl: string, token: string, id: number): Promise<{ buffer: ArrayBuffer, fileName: string | null, contentType: string | null }> {
   const response = await ofetch.raw(`${baseUrl}/api/documents/${id}/download/?original=true`, {
     headers: createHeaders(token),
     responseType: 'arrayBuffer',
@@ -127,7 +127,7 @@ export async function downloadDocument(baseUrl: string, token: string, id: numbe
   const match = disposition?.match(/filename="?([^"]+)"?/)
   const rawName = utf8Match?.[1] ? decodeURIComponent(utf8Match[1]) : match?.[1] ?? null
   const fileName = rawName ? (rawName.split(/[/\\]/).pop() ?? null) : null
-  return { buffer: response._data as ArrayBuffer, fileName }
+  return { buffer: response._data as ArrayBuffer, fileName, contentType: response.headers.get('content-type') }
 }
 
 export async function exportAll(baseUrl: string, token: string): Promise<PaperlessExport> {

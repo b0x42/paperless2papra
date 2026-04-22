@@ -160,7 +160,8 @@ async function downloadDocument(baseUrl, token, id) {
 	const fileName = rawName ? rawName.split(/[/\\]/).pop() ?? null : null;
 	return {
 		buffer: response._data,
-		fileName
+		fileName,
+		contentType: response.headers.get("content-type")
 	};
 }
 async function exportAll(baseUrl, token) {
@@ -239,10 +240,11 @@ async function patchDocument(ctx, docId, body) {
 async function migrateOneDocument(doc, index, total, ctx) {
 	const encodedName = encodeDocumentName(doc.title, doc.created_date, doc.archive_serial_number);
 	console.log(`${pc.dim(`[${index + 1}/${total}]`)} Migrating "${pc.bold(encodedName)}"...`);
-	const { buffer, fileName: responseFileName } = await downloadDocument(ctx.paperlessUrl, ctx.paperlessToken, doc.id);
+	const { buffer, fileName: responseFileName, contentType: responseContentType } = await downloadDocument(ctx.paperlessUrl, ctx.paperlessToken, doc.id);
+	const mimeType = doc.mime_type ?? responseContentType ?? "application/octet-stream";
 	const ext = doc.mime_type ? MIME_EXTENSIONS[doc.mime_type] ?? `.${doc.mime_type.split("/")[1]}` : "";
 	const fileName = doc.original_file_name ?? responseFileName ?? `${doc.title}${ext}`;
-	const file = new File([buffer], fileName, { type: doc.mime_type ?? "application/octet-stream" });
+	const file = new File([buffer], fileName, { type: mimeType });
 	let documentId;
 	try {
 		const { document } = await ctx.client.forOrganization(ctx.orgId).uploadDocument({ file });
