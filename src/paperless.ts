@@ -127,7 +127,7 @@ export async function downloadDocument(baseUrl: string, token: string, id: numbe
   const match = disposition?.match(/filename="?([^"]+)"?/)
   const rawName = utf8Match?.[1] ? decodeURIComponent(utf8Match[1]) : match?.[1] ?? null
   const fileName = rawName ? (rawName.split(/[/\\]/).pop() ?? null) : null
-  return { buffer: response._data as ArrayBuffer, fileName }
+  return { buffer: response._data as ArrayBuffer, fileName, contentType: response.headers.get('content-type') }
 }
 
 export async function exportAll(baseUrl: string, token: string): Promise<PaperlessExport> {

@@ -100,10 +100,11 @@ async function migrateOneDocument(
   console.log(`${pc.dim(`[${index + 1}/${total}]`)} Migrating "${pc.bold(encodedName)}"...`)
 
   // Download from Paperless
-  const { buffer, fileName: responseFileName } = await downloadDocument(ctx.paperlessUrl, ctx.paperlessToken, doc.id)
+  const { buffer, fileName: responseFileName, contentType: responseContentType } = await downloadDocument(ctx.paperlessUrl, ctx.paperlessToken, doc.id)
+  const mimeType = doc.mime_type ?? responseContentType ?? 'application/octet-stream'
   const ext = doc.mime_type ? (MIME_EXTENSIONS[doc.mime_type] ?? `.${doc.mime_type.split('/')[1]}`) : ''
   const fileName = doc.original_file_name ?? responseFileName ?? `${doc.title}${ext}`
-  const file = new File([buffer], fileName, { type: doc.mime_type ?? 'application/octet-stream' })
+  const file = new File([buffer], fileName, { type: mimeType })
 
   // Upload to Papra
   let documentId: string
