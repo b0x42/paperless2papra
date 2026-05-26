@@ -21,6 +21,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+        if: matrix.node-version == 22
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
