@@ -38,7 +38,7 @@
     "@antfu/eslint-config": "^4.0.0",
     "@types/node": "^25.9.1",
     "eslint": "^9.0.0",
-    "tsdown": "^0.22.0",
+    "tsdown": "^0.22.2",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3",
     "vitest": "^4.1.7"
