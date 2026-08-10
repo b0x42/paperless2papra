@@ -56,7 +56,7 @@ export interface PaperlessExport {
 function createHeaders(token: string) {
   return {
     Authorization: `Token ${token}`,
-    Accept: 'application/json; version=2',
+    Accept: 'application/json; version=9',
   }
 }
 
