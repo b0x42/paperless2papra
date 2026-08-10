@@ -1,6 +1,15 @@
 import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
-import { paginatedSchema, paperlessCorrespondentSchema, paperlessDocumentSchema, paperlessDocumentTypeSchema, paperlessTagSchema } from './paperless'
+import { createHeaders, paginatedSchema, paperlessCorrespondentSchema, paperlessDocumentSchema, paperlessDocumentTypeSchema, paperlessTagSchema } from './paperless'
+
+describe('createHeaders', () => {
+  it('sends token auth and a supported API version', () => {
+    expect(createHeaders('abc123')).toEqual({
+      Authorization: 'Token abc123',
+      Accept: 'application/json; version=9',
+    })
+  })
+})
 
 describe('paperlessTagSchema', () => {
   it('parses tag with color', () => {
