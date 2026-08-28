@@ -112,13 +112,15 @@ const dryRunCommand = defineCommand({
 
       console.log(pc.bold(`\nDocument name mappings (first 10):`))
       for (const doc of data.documents.slice(0, 10)) {
-        const encoded = encodeDocumentName(doc.title, doc.created_date, doc.archive_serial_number)
+        const encoded = encodeDocumentName(doc.title, doc.archive_serial_number)
         if (encoded !== doc.title) {
           console.log(`  ${doc.title} → ${pc.green(encoded)}`)
         }
         else {
           console.log(`  ${doc.title} ${pc.dim('(unchanged)')}`)
         }
+        if (doc.created_date)
+          console.log(`    document date → ${pc.green(doc.created_date)}`)
       }
       if (data.documents.length > 10)
         console.log(pc.dim(`  ... and ${data.documents.length - 10} more`))
