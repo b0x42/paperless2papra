@@ -34,8 +34,8 @@ cli.ts  →  paperless.ts (fetch/download)  →  mapping.ts (transform)  →  pa
 ```
 
 - **`paperless.ts`** — Paperless-ngx API client. Paginates all tags, correspondents, document types, and documents via `fetchAllPaginated`. Downloads original files via `downloadDocument`, which returns the file buffer, filename from `Content-Disposition`, and `Content-Type` header.
-- **`mapping.ts`** — Transforms Paperless entities into Papra-compatible shapes. Correspondents and document types become Papra tags with fixed colors (`correspondent:NAME`, `type:NAME`). Tag names are truncated to 50 chars. `encodeDocumentName` prefixes the title with `[YYYY-MM-DD]` and `[ASN:N]` if present.
-- **`papra.ts`** — Papra API client wrapper. `migrateOneDocument` downloads the file, builds a `File` object (using `doc.mime_type` → HTTP `Content-Type` → `application/octet-stream` as MIME fallback), uploads it, then PATCHes the name and OCR content in one call, and associates tags. Duplicate uploads (409) are silently skipped.
+- **`mapping.ts`** — Transforms Paperless entities into Papra-compatible shapes. Correspondents and document types become Papra tags with fixed colors (`correspondent:NAME`, `type:NAME`). Tag names are truncated to 50 chars. `encodeDocumentName` prefixes the title with `[ASN:N]` if present.
+- **`papra.ts`** — Papra API client wrapper. `migrateOneDocument` downloads the file, builds a `File` object (using `doc.mime_type` → HTTP `Content-Type` → `application/octet-stream` as MIME fallback), uploads it, then PATCHes the name, OCR content, and `documentDate` (from Paperless `created_date`) in one call, and associates tags. Duplicate uploads (409) are silently skipped.
 - **`cli.ts`** — Three subcommands: `migrate` (full run), `dry-run` (preview only, no writes), `export-only` (dump Paperless data to JSON). All credentials can be passed as CLI flags or env vars (`PAPERLESS_URL`, `PAPERLESS_TOKEN`, `PAPRA_URL`, `PAPRA_TOKEN`, `PAPRA_ORG_ID`).
 
 **Papra API key** must have permissions: `organizations:read`, `documents:create`, `documents:read`, `documents:update`, `tags:create`, `tags:read` — validated on startup by `migrate`.
@@ -46,3 +46,8 @@ cli.ts  →  paperless.ts (fetch/download)  →  mapping.ts (transform)  →  pa
 - Migration is idempotent: re-running skips already-uploaded documents (Papra returns 409 on duplicates).
 - Tags are created once up-front; existing tags with matching names are reused.
 - `resolveNextUrl` validates that pagination URLs stay on the same hostname to prevent SSRF.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->

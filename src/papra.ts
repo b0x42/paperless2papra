@@ -81,7 +81,7 @@ async function createTagsInPapra(
   return { tagMap, correspondentMap, docTypeMap }
 }
 
-async function patchDocument(ctx: MigrationContext, docId: string, body: { name?: string, content?: string }) {
+async function patchDocument(ctx: MigrationContext, docId: string, body: { name?: string, content?: string, documentDate?: string }) {
   await ofetch(`${ctx.papraUrl}/api/organizations/${ctx.orgId}/documents/${docId}`, {
     method: 'PATCH',
     headers: { 'Authorization': `Bearer ${ctx.papraToken}`, 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ async function migrateOneDocument(
   total: number,
   ctx: MigrationContext,
 ): Promise<'migrated' | 'skipped'> {
-  const encodedName = encodeDocumentName(doc.title, doc.created_date, doc.archive_serial_number)
+  const encodedName = encodeDocumentName(doc.title, doc.archive_serial_number)
   console.log(`${pc.dim(`[${index + 1}/${total}]`)} Migrating "${pc.bold(encodedName)}"...`)
 
   // Download from Paperless
@@ -125,9 +125,11 @@ async function migrateOneDocument(
 
   // PATCH name + content in one call
   try {
-    const patchBody: { name?: string, content?: string } = { name: encodedName }
+    const patchBody: { name?: string, content?: string, documentDate?: string } = { name: encodedName }
     if (doc.content)
       patchBody.content = doc.content
+    if (doc.created_date)
+      patchBody.documentDate = doc.created_date
     await patchDocument(ctx, documentId, patchBody)
 
     // Associate tags

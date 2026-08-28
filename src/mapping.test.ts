@@ -34,24 +34,12 @@ describe('mapDocumentTypes', () => {
 })
 
 describe('encodeDocumentName', () => {
-  it('encodes date and ASN', () => {
-    expect(encodeDocumentName('Invoice.pdf', '2024-01-15', 1234)).toBe('[2024-01-15] [ASN:1234] Invoice.pdf')
+  it('encodes ASN', () => {
+    expect(encodeDocumentName('Invoice.pdf', 1234)).toBe('[ASN:1234] Invoice.pdf')
   })
 
-  it('encodes date only', () => {
-    expect(encodeDocumentName('Invoice.pdf', '2024-01-15', null)).toBe('[2024-01-15] Invoice.pdf')
-  })
-
-  it('encodes ASN only', () => {
-    expect(encodeDocumentName('Invoice.pdf', null, 1234)).toBe('[ASN:1234] Invoice.pdf')
-  })
-
-  it('returns title unchanged when no date or ASN', () => {
-    expect(encodeDocumentName('Invoice.pdf', null, null)).toBe('Invoice.pdf')
-  })
-
-  it('truncates date to YYYY-MM-DD', () => {
-    expect(encodeDocumentName('Doc.pdf', '2024-01-15T12:00:00Z', null)).toBe('[2024-01-15] Doc.pdf')
+  it('returns title unchanged when no ASN', () => {
+    expect(encodeDocumentName('Invoice.pdf', null)).toBe('Invoice.pdf')
   })
 })
 

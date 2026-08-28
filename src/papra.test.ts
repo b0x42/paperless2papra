@@ -78,7 +78,7 @@ describe('migrate', () => {
     expect(addTagToDocument).toHaveBeenCalledTimes(3)
   })
 
-  it('patches document with encoded name and content', async () => {
+  it('patches document with encoded name, content, and document date', async () => {
     setupMocks()
     await migrate(makeExport(), 'http://pl', 'pl-token', 'http://papra', 'papra-token', 'org-1')
 
@@ -86,7 +86,7 @@ describe('migrate', () => {
       'http://papra/api/organizations/org-1/documents/papra-doc-1',
       expect.objectContaining({
         method: 'PATCH',
-        body: { name: '[2024-01-15] [ASN:42] Test Doc', content: 'OCR text' },
+        body: { name: '[ASN:42] Test Doc', content: 'OCR text', documentDate: '2024-01-15' },
       }),
     )
   })
