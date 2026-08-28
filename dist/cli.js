@@ -40,9 +40,8 @@ function mapDocumentTypes(types) {
 		sourceId: t.id
 	}));
 }
-function encodeDocumentName(title, createdDate, asn) {
+function encodeDocumentName(title, asn) {
 	const parts = [];
-	if (createdDate) parts.push(`[${createdDate.slice(0, 10)}]`);
 	if (asn != null) parts.push(`[ASN:${asn}]`);
 	parts.push(title);
 	return parts.join(" ");
@@ -238,7 +237,7 @@ async function patchDocument(ctx, docId, body) {
 	});
 }
 async function migrateOneDocument(doc, index, total, ctx) {
-	const encodedName = encodeDocumentName(doc.title, doc.created_date, doc.archive_serial_number);
+	const encodedName = encodeDocumentName(doc.title, doc.archive_serial_number);
 	console.log(`${pc.dim(`[${index + 1}/${total}]`)} Migrating "${pc.bold(encodedName)}"...`);
 	const { buffer, fileName: responseFileName, contentType: responseContentType } = await downloadDocument(ctx.paperlessUrl, ctx.paperlessToken, doc.id);
 	const mimeType = doc.mime_type ?? responseContentType ?? "application/octet-stream";
@@ -260,6 +259,7 @@ async function migrateOneDocument(doc, index, total, ctx) {
 	try {
 		const patchBody = { name: encodedName };
 		if (doc.content) patchBody.content = doc.content;
+		if (doc.created_date) patchBody.documentDate = doc.created_date;
 		await patchDocument(ctx, documentId, patchBody);
 		const papraTagIds = resolveTagIds(doc, ctx.tagMap, ctx.correspondentMap, ctx.docTypeMap);
 		for (const tagId of papraTagIds) await ctx.client.forOrganization(ctx.orgId).addTagToDocument({
@@ -460,9 +460,10 @@ const dryRunCommand = defineCommand({
 			}
 			console.log(pc.bold(`\nDocument name mappings (first 10):`));
 			for (const doc of data.documents.slice(0, 10)) {
-				const encoded = encodeDocumentName(doc.title, doc.created_date, doc.archive_serial_number);
+				const encoded = encodeDocumentName(doc.title, doc.archive_serial_number);
 				if (encoded !== doc.title) console.log(`  ${doc.title} → ${pc.green(encoded)}`);
 				else console.log(`  ${doc.title} ${pc.dim("(unchanged)")}`);
+				if (doc.created_date) console.log(`    document date → ${pc.green(doc.created_date)}`);
 			}
 			if (data.documents.length > 10) console.log(pc.dim(`  ... and ${data.documents.length - 10} more`));
 		} catch (err) {
