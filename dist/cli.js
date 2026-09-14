@@ -101,7 +101,7 @@ const paperlessDocumentSchema = v.object({
 function createHeaders(token) {
 	return {
 		Authorization: `Token ${token}`,
-		Accept: "application/json; version=9"
+		Accept: "application/json"
 	};
 }
 function resolveNextUrl(baseUrl, next) {
