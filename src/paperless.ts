@@ -53,12 +53,13 @@ export interface PaperlessExport {
   documents: PaperlessDocument[]
 }
 
-// Paperless-ngx drops support for old API versions ~1 year after newer ones ship;
-// bump this deliberately if requests start failing with 406 Not Acceptable.
+// Omit the API version param so Paperless-ngx serves its own configured default
+// instead of a version we hardcode — pinning a version breaks whichever side
+// (old or new servers) falls outside that single version's support window.
 export function createHeaders(token: string) {
   return {
     Authorization: `Token ${token}`,
-    Accept: 'application/json; version=9',
+    Accept: 'application/json',
   }
 }
 

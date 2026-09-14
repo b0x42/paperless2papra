@@ -3,10 +3,10 @@ import { describe, expect, it } from 'vitest'
 import { createHeaders, paginatedSchema, paperlessCorrespondentSchema, paperlessDocumentSchema, paperlessDocumentTypeSchema, paperlessTagSchema } from './paperless'
 
 describe('createHeaders', () => {
-  it('sends token auth and a supported API version', () => {
+  it('sends token auth and no pinned API version, so the server picks its own default', () => {
     expect(createHeaders('abc123')).toEqual({
       Authorization: 'Token abc123',
-      Accept: 'application/json; version=9',
+      Accept: 'application/json',
     })
   })
 })
