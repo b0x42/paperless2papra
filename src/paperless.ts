@@ -38,7 +38,7 @@ export const paperlessDocumentSchema = v.object({
   created_date: v.nullable(v.string()),
   archive_serial_number: v.nullable(v.number()),
   original_file_name: v.nullable(v.string()),
-  mime_type: v.nullable(v.string()),
+  mime_type: v.optional(v.nullable(v.string())),
 })
 
 export type PaperlessTag = v.InferOutput<typeof paperlessTagSchema>

@@ -89,6 +89,11 @@ describe('paperlessDocumentSchema', () => {
     expect(doc.tags).toEqual([])
   })
 
+  it('parses document without mime_type field (older API versions)', () => {
+    const { mime_type, ...docWithoutMimeType } = validDoc
+    expect(v.parse(paperlessDocumentSchema, docWithoutMimeType).mime_type).toBeUndefined()
+  })
+
   it('rejects document without title', () => {
     expect(() => v.parse(paperlessDocumentSchema, { ...validDoc, title: undefined })).toThrow()
   })
